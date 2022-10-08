@@ -1,0 +1,28 @@
+<head>
+  <title>پنل اطلاعات کمپرسورها</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.min.js"></script>
+</head>
+
+<body>
+  <div id="inputs">
+    <span>
+      <p>Select your desired <strong>Air Demand</strong> range</p>
+      <select id="select-demand">
+        <option value="" disabled selected>Air Demand</option>
+      </select>
+    </span>
+    <span>
+      <p>Select your desired <strong>Air Pressure</strong> value</p>
+      <select id="select-pressure">
+        <option value="" disabled selected>Air Pressure</option>
+      </select>
+    </span>
+  </div>
+  <div id="outputs">
+    <p class="output-title">Suggested Compressor Models</p>
+    <ul id="result-frame"></ul>
+  </div>
+  <script src="script.js" type="text/javascript"></script>
+</body>
