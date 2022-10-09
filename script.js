@@ -13,6 +13,8 @@ project = "";
 tnumber = "";
 address = "";
 
+demandList.addEventListener("change", handleDemandChange);
+pressureList.addEventListener("change", handlePressureChange);
 projectInput.addEventListener("change", updateProject);
 tnumberInput.addEventListener("change", updateProject);
 addressInput.addEventListener("change", updateProject);
@@ -123,13 +125,12 @@ function filterAndUpdate() {
     if (!suggestedIDs.includes(model.id)) {
       let element = document.createElement("li");
       element.innerHTML = model.model;
-      element.style.backgroundColor = "#28282822";
       resultFrame.appendChild(element);
     }
   });
 }
 
-// update project name
+// update user inputs
 function updateProject(e) {
   switch (e.target.id) {
     case "pname":
