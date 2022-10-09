@@ -19,7 +19,9 @@ body {
   height: 100%;
   width: 100%;
 
-  background-color: #dadcda;
+  background-image: url(./main-bg.png);
+  background-size: cover;
+  background-position: center center;
 
   display: flex;
   flex-direction: row;
