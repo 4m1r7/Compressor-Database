@@ -19,7 +19,9 @@ projectInput.addEventListener("change", updateProject);
 tnumberInput.addEventListener("change", updateProject);
 addressInput.addEventListener("change", updateProject);
 
-fetch("https://sheetdb.io/api/v1/wr91xj5tiv7i0")
+fetch(
+  "https://res.cloudinary.com/cloudstash/raw/upload/v1665401302/data_nc6aip.json"
+)
   .then((response) => response.json())
   .then((json) => renderData(json));
 
