@@ -80,8 +80,20 @@ option {
   align-items: space-between;
 }
 
-input {
-  width: 60%;
+input[type="text"] {
+  width: 63%;
+  max-width: 350px;
+  font-size: 0.7rem;
+  background-color: #0001;
+  padding: 5px 10px;
+  border: none;
+  border-bottom: 1px solid #888;
+  border-radius: 3px 3px 0 0;
+}
+
+input[type="number"] {
+  width: 15%;
+  max-width: 80px;
   font-size: 0.7rem;
   background-color: #0001;
   padding: 5px 10px;
@@ -134,6 +146,12 @@ li {
   padding: 7px;
   padding-left: 10px;
   border-bottom: solid 1px #ddd;
+  transition: all 0.1s;
+}
+
+.choice:hover {
+  background-color: #286428bb !important;
+  color: white;
 }
 
 #generatePDF {

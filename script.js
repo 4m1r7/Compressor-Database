@@ -1,20 +1,22 @@
 // constants & elements
-const demandList = document.querySelector("#select-demand");
-const pressureList = document.querySelector("#select-pressure");
+const demandInput = document.querySelector("#select-demand");
+const pressureInput = document.querySelector("#select-pressure");
 const resultFrame = document.querySelector("#result-frame");
 const projectInput = document.querySelector("#pname");
 const tnumberInput = document.querySelector("#tnumber");
 const addressInput = document.querySelector("#address");
+const selectedLabel = document.querySelector("#selected-label");
 
-demandFilterLow = 0;
-demandFilterHigh = 0;
-pressureFilter = 0;
+var demandFilterLow;
+var demandFilterHigh;
+var pressureFilter;
 project = "";
 tnumber = "";
 address = "";
+selected = "";
 
-demandList.addEventListener("change", handleDemandChange);
-pressureList.addEventListener("change", handlePressureChange);
+demandInput.addEventListener("keyup", handleDemandChange);
+pressureInput.addEventListener("keyup", handlePressureChange);
 projectInput.addEventListener("change", updateProject);
 tnumberInput.addEventListener("change", updateProject);
 addressInput.addEventListener("change", updateProject);
@@ -27,47 +29,22 @@ fetch("https://res.cloudinary.com/cloudstash/raw/upload/v1665401302/data_nc6aip.
 function renderData(data) {
   // constants & elements
   products = data;
-  let demandOptions = [];
-  let pressureOptions = [];
 
   // loop through data to populate filters and load initial product list
   data.forEach((model) => {
-    // create a list of air pressure unique options
-    let range = `${model.airDemandLow}-${model.airDemandHigh}`;
-    if (!demandOptions.includes(range)) {
-      demandOptions.push(range);
-    }
-
-    // create a list of air pressure unique options
-    if (!pressureOptions.includes(model.airPressure)) {
-      pressureOptions.push(model.airPressure);
-    }
-
     // populate results window with unfiltered list of models
     let element = document.createElement("li");
     element.innerHTML = model.model;
     resultFrame.appendChild(element);
-  });
-
-  // populate air pressure filters
-  pressureOptions.forEach((option) => {
-    let element = document.createElement("option");
-    element.innerHTML = option;
-    pressureList.appendChild(element);
-  });
-  // populate air demand filters
-  demandOptions.forEach((option) => {
-    let element = document.createElement("option");
-    element.innerHTML = option;
-    demandList.appendChild(element);
   });
 }
 
 // update product list when air demand is chosen
 function handleDemandChange(e) {
   // accessing air demand range bounfaries
-  demandFilterLow = parseFloat(e.target.value.split("-")[0]);
-  demandFilterHigh = parseFloat(e.target.value.split("-")[1]);
+  demandFilterLow = parseFloat(e.target.value);
+  demandFilterHigh = demandFilterLow * 1.1;
+
   // update products according to chosen filters
   filterAndUpdate();
 }
@@ -85,20 +62,22 @@ function filterAndUpdate() {
   resultFrame.innerHTML = "";
 
   // create temp list to filter
-  let filteredList = products;
+  let filteredList = !demandFilterLow && !pressureFilter ? [] : products;
 
   // apply air demand filter
-  if (demandFilterLow != 0) {
+  if (demandFilterLow) {
     filteredList = filteredList.filter((item) => {
       return (
-        item.airDemandLow >= demandFilterLow &&
-        item.airDemandHigh <= demandFilterHigh * 1.1
+        (item.airDemandLow <= demandFilterLow &&
+          item.airDemandHigh >= demandFilterLow) ||
+        (item.airDemandLow <= demandFilterHigh &&
+          item.airDemandHigh >= demandFilterHigh)
       );
     });
   }
 
   // apply air pressure filter
-  if (pressureFilter != 0) {
+  if (pressureFilter) {
     filteredList = filteredList.filter((item) => {
       return (
         item.airPressure >= pressureFilter &&
@@ -110,9 +89,12 @@ function filterAndUpdate() {
   // update the suggested list
   filteredList.forEach((model) => {
     let element = document.createElement("li");
+    element.classList.add("choice");
     element.innerHTML = model.model;
     element.style.backgroundColor = "#28642844";
     element.style.fontWeight = "550";
+    element.style.cursor = "pointer";
+    element.addEventListener("click", updateSelectedLabel);
     resultFrame.appendChild(element);
   });
 
@@ -145,14 +127,21 @@ function updateProject(e) {
   }
 }
 
+// select the model that user clicks on, and update label
+function updateSelectedLabel(e) {
+  selected = e.target.innerText;
+  selectedLabel.innerText = selected;
+}
+
 // check for required inputs
 function pdfReq() {
-  project && tnumber && address ? generatePDF() : pdfFail();
+  console.log(project, tnumber, address, selected);
+  project && tnumber && address && selected ? generatePDF() : pdfFail();
 }
 
 // alert the user to provide required inputs
 function pdfFail() {
-  console.log("fill all inputs!");
+  alert("Fill all fields and select a model!");
 }
 
 // generate pdf report
@@ -168,5 +157,6 @@ function generatePDF() {
   pdf.text(`Project Name: ${project}`, 12, 50);
   pdf.text(`Phone Number: ${tnumber}`, 12, 60);
   pdf.text(`Address: ${address}`, 12, 70);
+  pdf.text(`Compressor Model: ${selected}`, 12, 80);
   pdf.save("jsPDF_2Pages.pdf");
 }
