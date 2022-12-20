@@ -35,9 +35,14 @@
       <span>
         <p>You have selected: <span id="selected-label">no model yet!</span></p>
       </span>
-      <button id="generatePDF" onclick="pdfReq()">
-        Save Project Information
-      </button>
+      <div id="buttons">
+        <button id="generatePDF" onclick="pdfReq()">
+          Save Project Information
+        </button>
+        <a id="download-datasheet" href="#" download target="_blank">
+          Download Datasheet
+        </a>
+      </div>
     </div>
     <!-- right column -->
     <div id="outputs">

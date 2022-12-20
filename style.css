@@ -63,7 +63,7 @@ option {
   width: 100%;
   max-width: 1000px;
   height: 100%;
-  max-height: 50vh;
+  max-height: 20rem;
   display: flex;
 }
 
@@ -154,9 +154,16 @@ li {
   color: white;
 }
 
+#buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2rem;
+}
+
 #generatePDF {
   padding: 10px 25px;
-  margin: 20px auto;
+  margin: 20px 0;
   background-color: #333a;
   color: #fff;
   border-radius: 10px;
@@ -167,4 +174,20 @@ li {
 }
 #generatePDF:hover {
   background-color: #333e;
+}
+
+#download-datasheet {
+  padding: 10px 17px;
+  margin: 20px 0;
+  background-color: rgba(29, 36, 60, 0.694);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  border: none;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+#download-datasheet:hover {
+  background-color: rgba(29, 36, 60, 0.851);
 }
