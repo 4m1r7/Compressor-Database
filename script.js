@@ -6,7 +6,9 @@ const projectInput = document.querySelector("#pname");
 const tnumberInput = document.querySelector("#tnumber");
 const addressInput = document.querySelector("#address");
 const selectedLabel = document.querySelector("#selected-label");
+const downloadButton = document.querySelector("#download-datasheet");
 
+var srcUrl = "http://mapropin.com/test/";
 var demandFilterLow;
 var demandFilterHigh;
 var pressureFilter;
@@ -15,13 +17,17 @@ tnumber = "";
 address = "";
 selected = "";
 
+// event listeners
 demandInput.addEventListener("keyup", handleDemandChange);
 pressureInput.addEventListener("keyup", handlePressureChange);
 projectInput.addEventListener("change", updateProject);
 tnumberInput.addEventListener("change", updateProject);
 addressInput.addEventListener("change", updateProject);
 
-fetch("https://res.cloudinary.com/cloudstash/raw/upload/v1665401302/data_nc6aip.json")
+// fetch data
+fetch(
+  "https://res.cloudinary.com/cloudstash/raw/upload/v1671552196/compressors_-_arrayed_tdyk6a.json"
+)
   .then((response) => response.json())
   .then((json) => renderData(json));
 
@@ -79,9 +85,15 @@ function filterAndUpdate() {
   // apply air pressure filter
   if (pressureFilter) {
     filteredList = filteredList.filter((item) => {
+      let pressureValues = [];
+      item.airPressure.split(",").forEach((value) => {
+        pressureValues.push(parseFloat(value));
+      });
       return (
-        item.airPressure >= pressureFilter &&
-        item.airPressure < pressureFilter * 1.2
+        (pressureValues[0] >= pressureFilter &&
+          pressureValues[0] < pressureFilter * 1.2) ||
+        (pressureValues[pressureValues.length - 1] >= pressureFilter &&
+          pressureValues[pressureValues.length - 1] < pressureFilter * 1.2)
       );
     });
   }
@@ -90,6 +102,7 @@ function filterAndUpdate() {
   filteredList.forEach((model) => {
     let element = document.createElement("li");
     element.classList.add("choice");
+    element.setAttribute("idnumber", model.id);
     element.innerHTML = model.model;
     element.style.backgroundColor = "#28642844";
     element.style.fontWeight = "550";
@@ -131,11 +144,17 @@ function updateProject(e) {
 function updateSelectedLabel(e) {
   selected = e.target.innerText;
   selectedLabel.innerText = selected;
+
+  // update model's datasheet link
+  let clickedId = e.target.attributes.idnumber.value;
+
+  products.find(({ id }) => id.toString() === clickedId).datasheet
+    ? (downloadButton.href = srcUrl + clickedId + ".pdf")
+    : (downloadButton.href = "#");
 }
 
 // check for required inputs
 function pdfReq() {
-  console.log(project, tnumber, address, selected);
   project && tnumber && address && selected ? generatePDF() : pdfFail();
 }
 
@@ -160,3 +179,6 @@ function generatePDF() {
   pdf.text(`Compressor Model: ${selected}`, 12, 80);
   pdf.save("jsPDF_2Pages.pdf");
 }
+
+//download datasheet
+function downloadDatasheet() {}
